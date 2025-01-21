@@ -1,0 +1,12 @@
+<header class="app-header">
+  <a href="/">File<b>Storage</b></a>
+  <nav>
+    <a href="/storage" class="<%= currentPath === '/storage' ? 'currentPage' : '' %> currentPage"><img src="/images/storage.svg"/>Storage</a>
+    <% if (!locals.currentUser) { %>
+      <a href="/log-in"><img src="/images/login.svg" alt="Log in" />Log in</a>
+    <a href="/sign-up"><img src="/images/sign-up.svg" alt="Sign up" />Sign up</a>
+    <% } else { %>
+    <a href="/log-out"><img src="/images/logout.svg" alt="Log out" />Log out</a>
+    <% } %>
+  </nav>
+</header>
