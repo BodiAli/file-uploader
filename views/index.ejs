@@ -9,6 +9,35 @@
   </head>
   <%- include('partials/header') %>
   <body>
-    <h1>HII</h1>
+    <main>
+      <section class="hero">
+        <h2>Welcome to File Storage</h2>
+        <p>Your secure, reliable, and easy-to-use online file storage solution. Start organizing and accessing your files from anywhere in the world.</p>
+        <a href="<%= locals.currentUser ? '/storage' : '/log-in'%>"><%= locals.currentUser ? 'Storage' : 'Get started'%></a>
+      </section>
+      <section class="cards">
+        <div>
+          <h3>Secure</h3>
+          <p>Robust encryption to keep your files safe and secure from unauthorized access.</p>
+        </div>
+        <div>
+          <h3>Ready Access</h3>
+          <p>Sync your files in the cloud, ensuring access to your latest version across any device.</p>
+        </div>
+        <div>
+          <h3>Easy-to-Use</h3>
+          <p>User-friendly interface that makes organizing and accessing your files a breeze.</p>
+        </div>
+      </section>
+    </main>
+    <footer>
+      <div>
+        <h4>Developed by <a href="https://github.com/BodiAli">@BodiAli</a></h4>
+        <p>A project showcasing full-stack development with Node.js</p>
+      </div>
+      <div>
+        <a href="https://github.com/BodiAli/file-uploader">View on GitHub</a>
+      </div>
+    </footer>
   </body>
 </html>
