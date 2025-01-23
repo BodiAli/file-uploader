@@ -9,8 +9,9 @@ exports.getSignUpPage = (req, res) => {
 };
 
 exports.getLoginPage = (req, res) => {
-  console.log(req.session.messages);
-  res.render("log-in");
+  const authenticationError = req.flash("error");
+
+  res.render("log-in", { authenticationError });
 };
 
 const emptyErr = "can not be empty.";
@@ -98,7 +99,7 @@ exports.authenticateUser = [
   passport.authenticate("local", {
     successRedirect: "/",
     failureRedirect: "/log-in",
-    failureMessage: true,
+    failureFlash: true,
   }),
 ];
 
