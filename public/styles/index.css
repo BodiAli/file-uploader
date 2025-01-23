@@ -26,6 +26,16 @@ main {
   max-width: 600px;
 }
 
+#welcome-user {
+  margin-bottom: -20px;
+  font-size: 1.2rem;
+  color: #00000088;
+}
+
+#welcome-user > b {
+  font-weight: 600;
+}
+
 .hero a {
   margin-top: 10px;
   text-decoration: none;
@@ -98,6 +108,10 @@ footer div:last-child > a {
   text-decoration: none;
   color: #0052b6;
   font-weight: 500;
+  transition: 200ms filter;
+  &:hover {
+    filter: brightness(1.4);
+  }
 }
 
 footer div:first-child > p {
