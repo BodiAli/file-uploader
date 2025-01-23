@@ -5,3 +5,11 @@
   <% }) %>
  </ul>
 <% } %>
+
+<% if (locals.authenticationError) { %>
+  <ul class="authentication-error">
+    <% authenticationError.forEach(error => { %>
+      <li><%= error %></li>
+    <% }) %>
+  </ul>
+<% } %>
