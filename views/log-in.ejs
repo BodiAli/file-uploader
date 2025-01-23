@@ -1,0 +1,29 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <%- include('partials/global') %>
+  <link rel="stylesheet" href="/styles/form.css">
+  <title>Log in</title>
+</head>
+<body>
+  <main>
+    <section>
+      <h1>Log in to your account.</h1>
+    </section>
+    <form action="/log-in" method="post">
+      <%- include('partials/errors') %>
+      <label>
+        <p>Username:</p>
+        <input type="text" name="username" required maxlength="255" />
+      </label>
+      <label>
+        <p>Password:</p>
+        <input type="password" name="password" required maxlength="255" />
+      </label>
+      <button type="submit">Log in</button>
+    </form>
+  </main>
+</body>
+</html>
