@@ -1,3 +1,37 @@
+.form-header {
+  background-color: #96c68e;
+  padding: 1rem;
+}
+
+.form-header > nav {
+  display: flex;
+  justify-content: center;
+  gap: 1rem;
+}
+
+.form-header a {
+  text-decoration: none;
+  color: #0052b6;
+  font-size: 1.3rem;
+  font-weight: 500;
+  position: relative;
+}
+
+.form-header a::after {
+  content: "";
+  display: block;
+  width: 100%;
+  margin-top: 2px;
+  position: absolute;
+  transform: scale(0);
+  border: 1px solid gray;
+  transition: transform 200ms;
+}
+
+.form-header a:hover::after {
+  transform: scale(1);
+}
+
 main {
   padding: 1rem;
 }
@@ -63,4 +97,9 @@ form > button {
   list-style-type: disc;
   list-style-position: inside;
   line-height: 1.2;
+}
+
+.authentication-error {
+  font-size: 1.2rem;
+  color: crimson;
 }
