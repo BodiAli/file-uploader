@@ -13,6 +13,9 @@
       <section class="hero">
         <h2>Welcome to File Storage</h2>
         <p>Your secure, reliable, and easy-to-use online file storage solution. Start organizing and accessing your files from anywhere in the world.</p>
+        <% if (locals.currentUser) { %>
+         <p id="welcome-user">Welcome <b><%= currentUser.username %></b>, click the button below to view your storage.</p>
+        <% } %>
         <a href="<%= locals.currentUser ? '/storage' : '/log-in'%>"><%= locals.currentUser ? 'Storage' : 'Get started'%></a>
       </section>
       <section class="cards">
