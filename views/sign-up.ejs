@@ -1,0 +1,33 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <%- include('partials/global') %>
+  <link rel="stylesheet" href="/styles/form.css">
+  <title>Sign Up</title>
+</head>
+<body>
+  <main>
+    <section>
+      <h1>Sign up for free!</h1>
+    </section>
+    <form action="/sign-up" method="post">
+      <%- include('partials/errors') %>
+      <label>
+        <p>Username:</p>
+        <input type="text" name="username" required maxlength="255" />
+      </label>
+      <label>
+        <p>Password:</p>
+        <input type="password" name="password" required maxlength="255" />
+      </label>
+      <label>
+       <p>Confirm password:</p>
+        <input type="password" name="confirmPassword" required maxlength="255" />
+      </label>
+      <button type="submit">Sign Up</button>
+    </form>
+  </main>
+</body>
+</html>
