@@ -1,3 +1,5 @@
 exports.getIndexPage = (req, res) => {
-  res.render("index");
+  const flashMessage = req.flash("info");
+
+  res.render("index", { flashMessage: flashMessage.length > 0 ? flashMessage : null });
 };
