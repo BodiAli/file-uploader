@@ -55,3 +55,27 @@ body {
   border: 1px solid gray;
   bottom: -30%;
 }
+
+.flash-message {
+  z-index: 1;
+  animation: fade-out 3000ms 2000ms ease-in-out 1 forwards;
+  padding: 1rem;
+  border-radius: 5px;
+  background-color: gainsboro;
+  position: absolute;
+  bottom: 1rem;
+  left: 50%;
+  transform: translateX(-50%);
+  display: block;
+}
+
+@keyframes fade-out {
+  from {
+    opacity: 1;
+    display: block;
+  }
+  to {
+    opacity: 0;
+    display: none;
+  }
+}
