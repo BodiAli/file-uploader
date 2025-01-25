@@ -4,15 +4,38 @@ const bcrypt = require("bcrypt");
 const passport = require("passport");
 const prisma = require("../prisma/prismaClient");
 
+exports.isAuthenticated = (req, res, next) => {
+  if (req.isAuthenticated()) {
+    next();
+    return;
+  }
+  res.redirect("/log-in");
+};
+
+exports.isNotAuthenticated = (req, res, next) => {
+  if (!req.isAuthenticated()) {
+    next();
+    return;
+  }
+
+  req.flash("info", "You are already logged in.");
+
+  res.redirect("/");
+};
+
 exports.getSignUpPage = (req, res) => {
   res.render("sign-up");
 };
 
-exports.getLoginPage = (req, res) => {
-  const authenticationError = req.flash("error");
-
-  res.render("log-in", { authenticationError });
-};
+exports.getLoginPage = [
+  this.isNotAuthenticated,
+  (req, res) => {
+    const authenticationError = req.flash("error");
+    res.render("log-in", {
+      authenticationError: authenticationError.length > 0 ? authenticationError : null,
+    });
+  },
+];
 
 const emptyErr = "can not be empty.";
 
