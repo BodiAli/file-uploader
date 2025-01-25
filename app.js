@@ -7,6 +7,7 @@ const passport = require("passport");
 const prisma = require("./prisma/prismaClient");
 const indexRouter = require("./routes/indexRouter");
 const authenticationRouter = require("./routes/authenticationRouter");
+const storageRouter = require("./routes/storageRouter");
 
 require("./config/passportConfig");
 
@@ -40,6 +41,7 @@ app.use((req, res, next) => {
 
 app.use("/", indexRouter);
 app.use("/", authenticationRouter);
+app.use("/storage", storageRouter);
 
 const port = process.env.PORT || 3000;
 
