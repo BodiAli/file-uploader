@@ -6,9 +6,14 @@ const prisma = require("../prisma/prismaClient");
 exports.getStoragePage = [
   isAuthenticated,
   asyncHandler(async (req, res) => {
+    const { sortBy } = req.query;
+
     const result = await prisma.folder.findMany({
       where: {
         userId: req.user.id,
+      },
+      orderBy: {
+        createdAt: sortBy || "asc",
       },
     });
 
@@ -18,7 +23,7 @@ exports.getStoragePage = [
       updatedAt: formatDistanceToNow(value.updatedAt, { addSuffix: true, includeSeconds: true }),
     }));
 
-    res.render("storage", { folders });
+    res.render("storage", { folders, sortBy });
   }),
 ];
 
