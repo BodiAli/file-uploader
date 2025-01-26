@@ -10,7 +10,44 @@
 <body>
   <%- include('partials/header') %>
   <main>
-    <h1>HII</h1>
+    <dialog>
+      <form class="create-folder-form" action="/storage/folder/create" method="post">
+        <button class="close-modal" type="button"><img src="/images/close.svg" alt="Close modal"></button>
+        <div>
+          <label>
+            Folder name:
+            <input type="text">
+          </label>
+          <button type="submit">Create folder</button>
+        </div>
+      </form>
+    </dialog>
+    <section class="hero">
+      <p>This is your storage library</p>
+      <p>Below are all your folders</p>
+    </section>
+
+    <section class="folders-container">
+      <div class="create-folder">
+        <button>Create new folder</button>
+      </div>
+      <div class="folders-info">
+        <p>Name</p>
+        <p>Created at</p>
+        <p>Updated at</p>
+        <p>Options</p>
+      </div>
+      <div class="folders">
+        <% folders.forEach(folder => { %>
+         <div class="folder">
+          <a href="#"><%= folder.name %></a>
+          <p><%= folder.createdAt %></p>
+          <p><%= folder.updatedAt %></p>
+         </div>
+        <% }) %>
+      </div>
+    </section>
   </main>
+  <script src="/scripts/storage.js"></script>
 </body>
 </html>
