@@ -16,7 +16,7 @@
         <div>
           <label>
             Folder name:
-            <input type="text">
+            <input type="text" name="folderName">
           </label>
           <button type="submit">Create folder</button>
         </div>
@@ -38,13 +38,17 @@
         <p>Options</p>
       </div>
       <div class="folders">
-        <% folders.forEach(folder => { %>
-         <div class="folder">
-          <a href="#"><%= folder.name %></a>
-          <p><%= folder.createdAt %></p>
-          <p><%= folder.updatedAt %></p>
-         </div>
-        <% }) %>
+        <% if (folders.length > 0) { %>
+          <% folders.forEach(folder => { %>
+           <div class="folder">
+            <a href="#"><%= folder.name %></a>
+            <p><%= folder.createdAt %></p>
+            <p><%= folder.updatedAt %></p>
+           </div>
+          <% }) %>
+        <% } else { %>
+          <p class="empty-text">You have no folders.</p>
+        <% } %>
       </div>
     </section>
   </main>
