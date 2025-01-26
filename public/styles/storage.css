@@ -112,6 +112,12 @@ dialog {
   gap: 1rem;
 }
 
+.empty-text {
+  align-self: center;
+  font-size: 1.3rem;
+  font-weight: 500;
+}
+
 .folder {
   display: grid;
   grid-template-columns: repeat(4, 1fr);
