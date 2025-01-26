@@ -24,6 +24,9 @@ app.use(
     store: new PrismaSessionStore(prisma, {
       dbRecordIdIsSessionId: true,
     }),
+    cookie: {
+      maxAge: 14 * 24 * 3600000,
+    },
   })
 );
 app.use(flash());
