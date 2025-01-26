@@ -30,6 +30,20 @@
     <section class="folders-container">
       <div class="create-folder">
         <button>Create new folder</button>
+          <form class="sort-by">
+            <p>Sort by</p>
+            <div>
+              <label>
+                <input type="radio" name="sortBy" value="asc" <%= sortBy === 'asc' || !sortBy ? 'checked' : '' %>>
+                Oldest
+              </label>
+              <label>
+                <input type="radio" name="sortBy" value="desc" <%= sortBy === 'desc' ? 'checked' : '' %>>
+                Newest
+              </label>
+            </div>
+            <button>Apply</button>
+          </form>
       </div>
       <div class="folders-info">
         <p>Name</p>
@@ -41,9 +55,10 @@
         <% if (folders.length > 0) { %>
           <% folders.forEach(folder => { %>
            <div class="folder">
-            <a href="#"><%= folder.name %></a>
+            <a href="storage/folder/<%= folder.id %>"><%= folder.name %></a>
             <p><%= folder.createdAt %></p>
             <p><%= folder.updatedAt %></p>
+            <button><img src="/images/options.svg" alt="Open options"></button>
            </div>
           <% }) %>
         <% } else { %>
