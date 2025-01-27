@@ -67,6 +67,17 @@ body {
   left: 50%;
   transform: translateX(-50%);
   display: block;
+  display: flex;
+  flex-direction: column;
+  gap: 1rem;
+}
+
+.flash-message.error {
+  background-color: crimson;
+  color: white;
+  font-weight: 500;
+  top: 1rem;
+  bottom: auto;
 }
 
 @keyframes fade-out {
