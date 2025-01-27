@@ -9,14 +9,15 @@
 </head>
 <body>
   <%- include('partials/header') %>
+  <%- include('partials/flash-message') %>
   <main>
     <dialog>
-      <form class="create-folder-form" action="/storage/folder/create" method="post">
+      <form class="create-folder-form folder-form" action="/storage/folder/create" method="post">
         <button class="close-modal" type="button"><img src="/images/close.svg" alt="Close modal"></button>
         <div>
           <label>
             Folder name:
-            <input type="text" name="folderName">
+            <input type="text" name="folderName" required>
           </label>
           <button type="submit">Create folder</button>
         </div>
@@ -55,11 +56,48 @@
         <% if (folders.length > 0) { %>
           <% folders.forEach(folder => { %>
            <div class="folder">
-            <a href="storage/folder/<%= folder.id %>"><%= folder.name %></a>
+            <a href="/storage/folder/<%= folder.id %>"><%= folder.name %></a>
             <p><%= folder.createdAt %></p>
             <p><%= folder.updatedAt %></p>
-            <button><img src="/images/options.svg" alt="Open options"></button>
+            <div class="dropdown">
+              <button data-folderId="<%= folder.id %>" class="dropbtn"><img src="/images/options.svg" alt="Open options"></button>
+              <div data-folderId="<%= folder.id %>" class="dropdown-content">
+                <div data-folderId="<%= folder.id %>" class="folder-edit">
+                  <img src="/images/edit.svg" alt="Edit folder" />
+                  <button>Edit</button>
+                </div>
+                <div data-folderId="<%= folder.id %>" class="folder-delete">
+                  <img src="/images/delete.svg" alt="Delete folder" />
+                  <button>Delete</button>
+                </div>
+              </div>
+            </div>
            </div>
+           <dialog class="edit-folder-modal" data-folderId="<%= folder.id %>">
+            <form class="edit-folder-form folder-form" action="/storage/folder/<%= folder.id %>/edit" method="post">
+              <button class="close-modal edit" type="button" data-folderId="<%= folder.id %>">
+                <img src="/images/close.svg" alt="Close modal" />
+              </button>
+              <div>
+                <label>
+                  Folder name:
+                  <input type="text" name="folderName" required value="<%= folder.name %>">
+                </label>
+                <button type="submit">Apply</button>
+              </div>
+            </form>
+          </dialog>
+          <dialog class="delete-folder-modal" data-folderId="<%= folder.id %>">
+            <form class="delete-folder-form" action="/storage/folder/<%= folder.id %>/delete" method="post">
+              <button class="close-modal delete" type="button" data-folderId="<%= folder.id %>">
+                <img src="/images/close.svg" alt="Close modal" />
+              </button>
+              <p>Are you sure you want to delete <b><%= folder.name %></b>?<br />
+                All data inside it will be deleted.
+              </p>
+              <button type="submit">Delete</button>
+            </form>
+          </dialog>
           <% }) %>
         <% } else { %>
           <p class="empty-text">You have no folders.</p>
