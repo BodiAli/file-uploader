@@ -46,6 +46,10 @@ app.use("/", indexRouter);
 app.use("/", authenticationRouter);
 app.use("/storage", storageRouter);
 
+app.use((err, req, res, _next) => {
+  res.status(500).send(err);
+});
+
 const port = process.env.PORT || 3000;
 
 app.listen(port, () => {
