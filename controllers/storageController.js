@@ -1,5 +1,6 @@
 const asyncHandler = require("express-async-handler");
 const { formatDistanceToNow } = require("date-fns");
+const { body, validationResult } = require("express-validator");
 const { isAuthenticated } = require("./authenticationController");
 const prisma = require("../prisma/prismaClient");
 
@@ -23,12 +24,28 @@ exports.getStoragePage = [
       updatedAt: formatDistanceToNow(value.updatedAt, { addSuffix: true, includeSeconds: true }),
     }));
 
-    res.render("storage", { folders, sortBy });
+    const validationError = req.flash("validationError");
+
+    res.render("storage", {
+      folders,
+      sortBy,
+      flashMessageError: validationError.length > 0 ? validationError : null,
+    });
   }),
 ];
 
 exports.createFolder = [
+  body("folderName").trim().notEmpty().withMessage("Folder name can not be empty."),
   asyncHandler(async (req, res) => {
+    const errors = validationResult(req);
+
+    if (!errors.isEmpty()) {
+      req.flash("validationError", errors.array({ onlyFirstError: true }));
+      const referrer = req.header("referrer") || "/storage";
+      res.redirect(referrer);
+      return;
+    }
+
     await prisma.folder.create({
       data: {
         name: req.body.folderName,
