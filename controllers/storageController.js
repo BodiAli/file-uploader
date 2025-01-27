@@ -51,7 +51,7 @@ exports.getFolderPage = [
 
     console.dir(folder, { depth: null });
 
-    res.send("folder");
+    res.render("folder", { folder });
   }),
 ];
 
