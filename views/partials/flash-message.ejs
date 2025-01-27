@@ -4,4 +4,12 @@
     <p><%= message %></p>
   <% }) %>
  </div>
+ <% } %>
+ 
+ <% if (locals.flashMessageError) { %>
+  <div class="flash-message error">
+   <% flashMessageError.forEach(message => { %>
+     <p><%= message.msg %></p>
+   <% }) %>
+  </div>
 <% } %>
