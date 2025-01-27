@@ -34,6 +34,27 @@ exports.getStoragePage = [
   }),
 ];
 
+exports.getFolderPage = [
+  isAuthenticated,
+  asyncHandler(async (req, res) => {
+    const id = Number(req.params.id);
+    const folder = await prisma.folder.findUnique({
+      where: {
+        id,
+      },
+      include: {
+        files: true,
+        subFolders: true,
+        parent: true,
+      },
+    });
+
+    console.dir(folder, { depth: null });
+
+    res.send("folder");
+  }),
+];
+
 exports.createFolder = [
   body("folderName").trim().notEmpty().withMessage("Folder name can not be empty."),
   asyncHandler(async (req, res) => {
@@ -58,3 +79,46 @@ exports.createFolder = [
     res.redirect(referrer);
   }),
 ];
+
+exports.updateFolder = [
+  body("folderName").trim().notEmpty().withMessage("Folder name can not be empty."),
+  asyncHandler(async (req, res) => {
+    const errors = validationResult(req);
+
+    if (!errors.isEmpty()) {
+      req.flash("validationError", errors.array({ onlyFirstError: true }));
+      const referrer = req.header("referrer") || "/storage";
+      res.redirect(referrer);
+      return;
+    }
+
+    const id = Number(req.params.id);
+
+    await prisma.folder.update({
+      data: {
+        name: req.body.folderName,
+      },
+      where: {
+        id,
+      },
+    });
+
+    const referrer = req.header("referrer") || "/storage";
+
+    res.redirect(referrer);
+  }),
+];
+
+exports.deleteFolder = asyncHandler(async (req, res) => {
+  const id = Number(req.params.id);
+
+  await prisma.folder.delete({
+    where: {
+      id,
+    },
+  });
+
+  const referrer = req.header("referrer") || "/storage";
+
+  res.redirect(referrer);
+});
