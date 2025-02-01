@@ -1,3 +1,4 @@
+const fs = require("node:fs/promises");
 const asyncHandler = require("express-async-handler");
 const { formatDistanceToNow } = require("date-fns");
 const { body, validationResult } = require("express-validator");
@@ -6,7 +7,7 @@ const { isAuthenticated } = require("./authenticationController");
 const prisma = require("../prisma/prismaClient");
 const cloudinary = require("../config/cloudinaryConfig");
 
-const upload = multer({ dest: "public/uploads/" });
+const upload = multer({ dest: "uploads/" });
 
 exports.getStoragePage = [
   isAuthenticated,
@@ -61,10 +62,11 @@ exports.getFolderPage = [
         createdAt: formatDistanceToNow(value.createdAt, { addSuffix: true, includeSeconds: true }),
         updatedAt: formatDistanceToNow(value.updatedAt, { addSuffix: true, includeSeconds: true }),
       })),
-      // files: result.files.map((value) => ({
-      //   createdAt: formatDistanceToNow(value.createdAt, { addSuffix: true, includeSeconds: true }),
-      //   updatedAt: formatDistanceToNow(value.updatedAt, { addSuffix: true, includeSeconds: true }),
-      // })),
+      files: result.files.map((value) => ({
+        ...value,
+        createdAt: formatDistanceToNow(value.createdAt, { addSuffix: true, includeSeconds: true }),
+        updatedAt: formatDistanceToNow(value.updatedAt, { addSuffix: true, includeSeconds: true }),
+      })),
     };
 
     // console.dir(folder, { depth: null });
@@ -156,9 +158,37 @@ exports.deleteFolder = asyncHandler(async (req, res) => {
 
 exports.createFile = [
   upload.single("uploadedFile"),
+
+  body("uploadedFile").custom((value, { req }) => {
+    if (req.file.size > 5242880) {
+      throw new Error("File cannot be larger than 5MB");
+    }
+    return true;
+  }),
+
   asyncHandler(async (req, res) => {
-    console.log(req.file);
+    const errors = validationResult(req);
+    if (!errors.isEmpty()) {
+      req.flash("validationError", errors.array({ onlyFirstError: true }));
+      const referrer = req.header("referrer") || "/storage";
+      res.redirect(referrer);
+      return;
+    }
+
     const id = Number(req.params.id);
+
+    const { secure_url: url } = await cloudinary.uploader.upload(req.file.path);
+
+    await fs.rm(req.file.destination, { recursive: true });
+
+    await prisma.file.create({
+      data: {
+        name: req.file.originalname,
+        size: req.file.size,
+        folderId: id,
+        url,
+      },
+    });
 
     const referrer = req.header("referrer") || "/storage";
 
