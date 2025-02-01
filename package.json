@@ -13,6 +13,7 @@
     "@prisma/client": "^6.2.1",
     "@quixo3/prisma-session-store": "^3.1.13",
     "bcrypt": "^5.1.1",
+    "byte-size": "^9.0.1",
     "cloudinary": "^2.5.1",
     "connect-flash": "^0.1.1",
     "date-fns": "^4.1.0",
