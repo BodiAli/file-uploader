@@ -7,6 +7,7 @@ storageRouter.get("/", storageController.getStoragePage);
 storageRouter.get("/folder/:id", storageController.getFolderPage);
 
 storageRouter.post("/folder/create", storageController.createFolder);
+storageRouter.post("/folder/create/:id", storageController.createFolder);
 
 storageRouter.post("/folder/:id/edit", storageController.updateFolder);
 storageRouter.post("/folder/:id/delete", storageController.deleteFolder);
