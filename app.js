@@ -47,6 +47,8 @@ app.use("/", authenticationRouter);
 app.use("/storage", storageRouter);
 
 // app.use((err, req, res, _next) => {
+//   console.error(err);
+
 //   res.status(500).send(err);
 // });
 
