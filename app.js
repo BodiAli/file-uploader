@@ -25,7 +25,7 @@ app.use(
       dbRecordIdIsSessionId: true,
     }),
     cookie: {
-      maxAge: 14 * 24 * 3600000,
+      maxAge: 14 * 24 * 3600000, // 2 weeks
     },
   })
 );
