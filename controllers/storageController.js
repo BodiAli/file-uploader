@@ -1,8 +1,11 @@
 const asyncHandler = require("express-async-handler");
 const { formatDistanceToNow } = require("date-fns");
 const { body, validationResult } = require("express-validator");
+const multer = require("multer");
 const { isAuthenticated } = require("./authenticationController");
 const prisma = require("../prisma/prismaClient");
+
+const upload = multer({ dest: "public/uploads/" });
 
 exports.getStoragePage = [
   isAuthenticated,
@@ -63,7 +66,7 @@ exports.getFolderPage = [
       // })),
     };
 
-    console.dir(folder, { depth: null });
+    // console.dir(folder, { depth: null });
 
     const validationError = req.flash("validationError");
 
@@ -149,3 +152,15 @@ exports.deleteFolder = asyncHandler(async (req, res) => {
 
   res.redirect(referrer);
 });
+
+exports.createFile = [
+  upload.single("uploadedFile"),
+  asyncHandler(async (req, res) => {
+    console.log(req.file);
+    const id = Number(req.params.id);
+
+    const referrer = req.header("referrer") || "/storage";
+
+    res.redirect(referrer);
+  }),
+];
