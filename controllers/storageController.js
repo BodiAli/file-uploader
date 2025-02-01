@@ -12,6 +12,7 @@ exports.getStoragePage = [
     const result = await prisma.folder.findMany({
       where: {
         userId: req.user.id,
+        parentId: null,
       },
       orderBy: {
         createdAt: sortBy || "asc",
@@ -38,7 +39,7 @@ exports.getFolderPage = [
   isAuthenticated,
   asyncHandler(async (req, res) => {
     const id = Number(req.params.id);
-    const folder = await prisma.folder.findUnique({
+    const result = await prisma.folder.findUnique({
       where: {
         id,
       },
@@ -49,9 +50,24 @@ exports.getFolderPage = [
       },
     });
 
+    const folder = {
+      ...result,
+      subFolders: result.subFolders.map((value) => ({
+        ...value,
+        createdAt: formatDistanceToNow(value.createdAt, { addSuffix: true, includeSeconds: true }),
+        updatedAt: formatDistanceToNow(value.updatedAt, { addSuffix: true, includeSeconds: true }),
+      })),
+      // files: result.files.map((value) => ({
+      //   createdAt: formatDistanceToNow(value.createdAt, { addSuffix: true, includeSeconds: true }),
+      //   updatedAt: formatDistanceToNow(value.updatedAt, { addSuffix: true, includeSeconds: true }),
+      // })),
+    };
+
     console.dir(folder, { depth: null });
 
-    res.render("folder", { folder });
+    const validationError = req.flash("validationError");
+
+    res.render("folder", { folder, flashMessageError: validationError.length > 0 ? validationError : null });
   }),
 ];
 
@@ -66,13 +82,24 @@ exports.createFolder = [
       res.redirect(referrer);
       return;
     }
+    const id = Number(req.params.id);
 
-    await prisma.folder.create({
-      data: {
-        name: req.body.folderName,
-        userId: req.user.id,
-      },
-    });
+    if (!id) {
+      await prisma.folder.create({
+        data: {
+          name: req.body.folderName,
+          userId: req.user.id,
+        },
+      });
+    } else {
+      await prisma.folder.create({
+        data: {
+          name: req.body.folderName,
+          userId: req.user.id,
+          parentId: id,
+        },
+      });
+    }
 
     const referrer = req.header("referrer") || "/storage";
 
