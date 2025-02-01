@@ -12,4 +12,6 @@ storageRouter.post("/folder/create/:id", storageController.createFolder);
 storageRouter.post("/folder/:id/edit", storageController.updateFolder);
 storageRouter.post("/folder/:id/delete", storageController.deleteFolder);
 
+storageRouter.post("/file/create/:id", storageController.createFile);
+
 module.exports = storageRouter;
