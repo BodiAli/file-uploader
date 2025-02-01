@@ -4,12 +4,101 @@
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <%- include('partials/global') %>
-  <title><%= folder.name %> | File Uploader</title>
+  <link rel="stylesheet" href="/styles/folder.css">
+  <title><%= folder.name %> | File uploader</title>
 </head>
 <body>
   <%- include('partials/header') %>
+  <%- include('partials/flash-message') %>
   <main>
-    <h1>HII</h1>
+    <dialog>
+      <form class="folder-form" action="/storage/folder/create/<%= folder.id %>" method="post">
+        <button class="close-modal" type="button"><img src="/images/close.svg" alt="Close modal"></button>
+        <div>
+          <label>
+            Folder name:
+            <input type="text" name="folderName" required>
+          </label>
+          <button type="submit">Create folder</button>
+        </div>
+      </form>
+    </dialog>
+    <section class="hero">
+      <% if (folder.parent) { %>
+        <a href="/storage/folder/<%= folder.parent.id %>">
+          <img src="/images/back.svg" alt="back to parent folder" /><%= folder.parent.name %>
+        </a>
+      <% } %>
+      <p>Folder: <%= folder.name %></p>
+    </section>
+    <section class="create-container">
+      <div class="create-folder">
+        <button>Create new folder</button>
+      </div>
+      <div class="create-file">
+        <button>Create new file</button>
+      </div>
+    </section>
+    <section class="folders-container">
+      <div class="folders-info">
+        <p>Name</p>
+        <p>Created at</p>
+        <p>Updated at</p>
+        <p>Options</p>
+      </div>
+      <div class="folders">
+        <% if (folder.subFolders.length > 0) { %>
+          <% folder.subFolders.forEach(folder => { %>
+           <div class="folder">
+            <a href="/storage/folder/<%= folder.id %>"><%= folder.name %></a>
+            <p><%= folder.createdAt %></p>
+            <p><%= folder.updatedAt %></p>
+            <div class="dropdown">
+              <button data-folderId="<%= folder.id %>" class="dropbtn"><img src="/images/options.svg" alt="Open options"></button>
+              <div data-folderId="<%= folder.id %>" class="dropdown-content">
+                <div data-folderId="<%= folder.id %>" class="folder-edit">
+                  <img src="/images/edit.svg" alt="Edit folder" />
+                  <button>Edit</button>
+                </div>
+                <div data-folderId="<%= folder.id %>" class="folder-delete">
+                  <img src="/images/delete.svg" alt="Delete folder" />
+                  <button>Delete</button>
+                </div>
+              </div>
+            </div>
+           </div>
+           <dialog class="edit-folder-modal" data-folderId="<%= folder.id %>">
+            <form class="edit-folder-form folder-form" action="/storage/folder/<%= folder.id %>/edit" method="post">
+              <button class="close-modal edit" type="button" data-folderId="<%= folder.id %>">
+                <img src="/images/close.svg" alt="Close modal" />
+              </button>
+              <div>
+                <label>
+                  Folder name:
+                  <input type="text" name="folderName" required value="<%= folder.name %>">
+                </label>
+                <button type="submit">Apply</button>
+              </div>
+            </form>
+          </dialog>
+          <dialog class="delete-folder-modal" data-folderId="<%= folder.id %>">
+            <form class="delete-folder-form" action="/storage/folder/<%= folder.id %>/delete" method="post">
+              <button class="close-modal delete" type="button" data-folderId="<%= folder.id %>">
+                <img src="/images/close.svg" alt="Close modal" />
+              </button>
+              <p>Are you sure you want to delete <b><%= folder.name %></b>?<br />
+                All data inside it will be deleted.
+              </p>
+              <button type="submit">Delete</button>
+            </form>
+          </dialog>
+          <% }) %>
+        <% } else { %>
+          <p class="empty-text">You have no folders.</p>
+        <% } %>
+      </div>
+    </section>
   </main>
+  <script src="/scripts/folder.js"></script>
 </body>
 </html>
