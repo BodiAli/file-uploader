@@ -23,6 +23,18 @@
         </div>
       </form>
     </dialog>
+    <dialog class="file">
+      <form class="file-form" enctype="multipart/form-data" action="/storage/file/create/<%= folder.id %>" method="post">
+        <button class="close-modal file" type="button"><img src="/images/close.svg" alt="Close modal"></button>
+        <div>
+          <label>
+            Upload file:
+            <input type="file" name="uploadedFile" required>
+          </label>
+          <button type="submit">Upload file</button>
+        </div>
+      </form>
+    </dialog>
     <section class="hero">
       <% if (folder.parent) { %>
         <a href="/storage/folder/<%= folder.parent.id %>">
