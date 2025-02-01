@@ -4,6 +4,7 @@ const { body, validationResult } = require("express-validator");
 const multer = require("multer");
 const { isAuthenticated } = require("./authenticationController");
 const prisma = require("../prisma/prismaClient");
+const cloudinary = require("../config/cloudinaryConfig");
 
 const upload = multer({ dest: "public/uploads/" });
 
