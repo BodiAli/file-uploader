@@ -1,6 +1,9 @@
 const dialog = document.querySelector("dialog");
 const showModalButton = document.querySelector(".create-folder > button");
 const closeModalButton = document.querySelector(".close-modal");
+const dialogFile = document.querySelector("dialog.file");
+const showModalFileButton = document.querySelector(".create-file > button");
+const closeModalFileButton = document.querySelector(".close-modal.file");
 
 const dropBtns = document.querySelectorAll(".dropbtn");
 const dropDowns = document.querySelectorAll(".dropdown-content");
@@ -17,6 +20,14 @@ showModalButton.addEventListener("click", () => {
 
 closeModalButton.addEventListener("click", () => {
   dialog.close();
+});
+
+showModalFileButton.addEventListener("click", () => {
+  dialogFile.showModal();
+});
+
+closeModalFileButton.addEventListener("click", () => {
+  dialogFile.close();
 });
 
 dropBtns.forEach((button) => {
