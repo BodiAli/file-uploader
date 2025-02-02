@@ -146,7 +146,7 @@
              </div>
              <dialog class="edit-file-modal" data-fileId="<%= file.id %>">
               <form class="edit-file-form file-form" action="/storage/file/<%= file.id %>/edit" method="post">
-                <button class="close-file-modal edit" type="button" data-fileId="<%= file.id %>">
+                <button class="close-file-modal edit close-modal" type="button" data-fileId="<%= file.id %>">
                   <img src="/images/close.svg" alt="Close modal" />
                 </button>
                 <div>
@@ -160,7 +160,7 @@
             </dialog>
             <dialog class="delete-file-modal" data-fileId="<%= file.id %>">
               <form class="delete-file-form" action="/storage/file/<%= file.id %>/delete" method="post">
-                <button class="close-file-modal delete" type="button" data-file="<%= file.id %>">
+                <button class="close-file-modal delete close-modal" type="button" data-fileid="<%= file.id %>">
                   <img src="/images/close.svg" alt="Close modal" />
                 </button>
                 <p>Are you sure you want to delete <b><%= file.name %></b>?</p>
