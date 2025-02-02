@@ -1,7 +1,7 @@
 const dialog = document.querySelector("dialog");
 const showModalButton = document.querySelector(".create-folder > button");
 const closeModalButton = document.querySelector(".close-modal");
-const dialogFile = document.querySelector("dialog.file");
+const dialogFile = document.querySelector("dialog.file-modal");
 const showModalFileButton = document.querySelector(".create-file > button");
 const closeModalFileButton = document.querySelector(".close-modal.file");
 
