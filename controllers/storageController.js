@@ -3,6 +3,7 @@ const asyncHandler = require("express-async-handler");
 const { formatDistanceToNow } = require("date-fns");
 const { body, validationResult } = require("express-validator");
 const multer = require("multer");
+const byteSize = require("byte-size");
 const { isAuthenticated } = require("./authenticationController");
 const prisma = require("../prisma/prismaClient");
 const cloudinary = require("../config/cloudinaryConfig");
@@ -66,6 +67,7 @@ exports.getFolderPage = [
         ...value,
         createdAt: formatDistanceToNow(value.createdAt, { addSuffix: true, includeSeconds: true }),
         updatedAt: formatDistanceToNow(value.updatedAt, { addSuffix: true, includeSeconds: true }),
+        size: byteSize(value.size, { precision: 2 }),
       })),
     };
 
