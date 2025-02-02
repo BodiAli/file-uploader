@@ -4,6 +4,7 @@ const { formatDistanceToNow } = require("date-fns");
 const { body, validationResult } = require("express-validator");
 const multer = require("multer");
 const byteSize = require("byte-size");
+const axios = require("axios");
 const { isAuthenticated } = require("./authenticationController");
 const prisma = require("../prisma/prismaClient");
 const cloudinary = require("../config/cloudinaryConfig");
@@ -71,7 +72,7 @@ exports.getFolderPage = [
       })),
     };
 
-    // console.dir(folder, { depth: null });
+    console.dir(folder, { depth: null });
 
     const validationError = req.flash("validationError");
 
@@ -179,7 +180,7 @@ exports.createFile = [
 
     const id = Number(req.params.id);
 
-    const { secure_url: url } = await cloudinary.uploader.upload(req.file.path);
+    const { secure_url: url } = await cloudinary.uploader.upload(req.file.path, { resource_type: "auto" });
 
     await fs.rm(req.file.destination, { recursive: true });
 
@@ -191,6 +192,16 @@ exports.createFile = [
         url,
       },
     });
+
+    // // Use Axios to stream the file from Cloudinary
+    // const response = await axios.get(file2.url, { responseType: "stream" });
+
+    // // Set headers for file download
+    // res.setHeader("Content-Disposition", `attachment; filename="${file2.name}"`);
+    // res.setHeader("Content-Type", response.headers["content-type"] || "application/octet-stream");
+
+    // // Stream the file to the response
+    // response.data.pipe(res);
 
     const referrer = req.header("referrer") || "/storage";
 
