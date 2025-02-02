@@ -46,6 +46,7 @@ exports.getFolderPage = [
   isAuthenticated,
   asyncHandler(async (req, res) => {
     const id = Number(req.params.id);
+
     const result = await prisma.folder.findUnique({
       where: {
         id,
