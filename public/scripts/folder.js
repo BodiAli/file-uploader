@@ -3,7 +3,7 @@ const showModalButton = document.querySelector(".create-folder > button");
 const closeModalButton = document.querySelector(".close-modal");
 const dialogFile = document.querySelector("dialog.file-modal");
 const showModalFileButton = document.querySelector(".create-file > button");
-const closeModalFileButton = document.querySelector(".close-modal.file");
+const closeModalFileButton = document.querySelector(".close-modal-file");
 
 const dropBtns = document.querySelectorAll(".dropbtn");
 const dropDowns = document.querySelectorAll(".dropdown-content");
