@@ -14,12 +14,14 @@ dialog {
   box-shadow: 0 0 5px 2px rgba(0, 0, 0, 0.5);
 }
 
-.delete-folder-modal {
+.delete-folder-modal,
+.delete-file-modal {
   margin: 5rem auto;
   box-shadow: 2px 2px 4px rgba(0, 0, 0, 0.5);
 }
 
-.delete-folder-form {
+.delete-folder-form,
+.delete-file-form {
   padding: 1rem;
   display: flex;
   flex-direction: column;
@@ -27,17 +29,20 @@ dialog {
   gap: 1rem;
 }
 
-.delete-folder-form > p {
+.delete-folder-form > p,
+.delete-file-form > p {
   font-size: 1.2rem;
   align-self: start;
   line-height: 1.2;
 }
 
-.delete-folder-form b {
+.delete-folder-form b,
+.delete-file-form b {
   font-weight: 500;
 }
 
-.delete-folder-form > button:last-child {
+.delete-folder-form > button:last-child,
+.delete-file-form > button:last-child {
   background-color: crimson;
   color: #fff;
   border: none;
@@ -244,6 +249,7 @@ dialog {
   background-color: #d2f3ca;
   border-radius: 3px;
   justify-items: center;
+  position: relative;
 }
 
 .folder > a {
@@ -268,7 +274,6 @@ dialog {
 }
 
 .dropdown {
-  position: relative;
   justify-self: stretch;
 }
 
@@ -276,8 +281,8 @@ dialog {
   display: none;
   position: absolute;
   top: 0;
-  right: 0;
-  left: 3rem;
+  left: 25%;
+  width: 50%;
   background-color: #fff;
   border-radius: 5px;
   box-shadow: 0 8px 16px rgba(0, 0, 0, 0.2);
