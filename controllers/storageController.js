@@ -8,6 +8,7 @@ const axios = require("axios");
 const { isAuthenticated } = require("./authenticationController");
 const prisma = require("../prisma/prismaClient");
 const cloudinary = require("../config/cloudinaryConfig");
+const NotFoundError = require("../errors/customNotFoundError");
 
 const upload = multer({ dest: "uploads/" });
 
@@ -47,6 +48,10 @@ exports.getFolderPage = [
   asyncHandler(async (req, res) => {
     const id = Number(req.params.id);
 
+    if (Number.isNaN(id)) {
+      throw new NotFoundError("Folder not found");
+    }
+
     const result = await prisma.folder.findUnique({
       where: {
         id,
@@ -57,6 +62,10 @@ exports.getFolderPage = [
         parent: true,
       },
     });
+
+    if (!result) {
+      throw new NotFoundError("Folder not found");
+    }
 
     const folder = {
       ...result,
@@ -72,8 +81,6 @@ exports.getFolderPage = [
         size: byteSize(value.size, { precision: 2 }),
       })),
     };
-
-    console.dir(folder, { depth: null });
 
     const validationError = req.flash("validationError");
 
@@ -160,6 +167,43 @@ exports.deleteFolder = asyncHandler(async (req, res) => {
   res.redirect(referrer);
 });
 
+exports.getFilePage = asyncHandler(async (req, res) => {
+  const id = Number(req.params.id);
+
+  if (Number.isNaN(id)) {
+    throw new NotFoundError("File not found");
+  }
+
+  const result = await prisma.file.findUnique({
+    where: {
+      id,
+    },
+    include: {
+      Folder: {
+        select: {
+          id: true,
+          name: true,
+        },
+      },
+    },
+  });
+
+  if (!result) {
+    throw new NotFoundError("File not found");
+  }
+
+  const file = {
+    ...result,
+    size: byteSize(result.size, { precision: 2 }),
+    createdAt: formatDistanceToNow(result.createdAt, { addSuffix: true, includeSeconds: true }),
+    updatedAt: formatDistanceToNow(result.updatedAt, { addSuffix: true, includeSeconds: true }),
+  };
+
+  const connectionError = req.flash("connectionError");
+
+  res.render("file", { file, flashMessage: connectionError.length > 0 ? connectionError : null });
+});
+
 exports.createFile = [
   upload.single("uploadedFile"),
 
@@ -194,18 +238,35 @@ exports.createFile = [
       },
     });
 
-    // // Use Axios to stream the file from Cloudinary
-    // const response = await axios.get(file2.url, { responseType: "stream" });
-
-    // // Set headers for file download
-    // res.setHeader("Content-Disposition", `attachment; filename="${file2.name}"`);
-    // res.setHeader("Content-Type", response.headers["content-type"] || "application/octet-stream");
-
-    // // Stream the file to the response
-    // response.data.pipe(res);
-
     const referrer = req.header("referrer") || "/storage";
 
     res.redirect(referrer);
   }),
 ];
+
+exports.downloadFile = asyncHandler(async (req, res) => {
+  const id = Number(req.params.id);
+  const file = await prisma.file.findUnique({
+    where: {
+      id,
+    },
+  });
+  try {
+    // Use Axios to stream the file from Cloudinary
+    const response = await axios.get(file.url, { responseType: "stream" });
+
+    if (response.statusText !== "OK") {
+      throw new Error("Connection error");
+    }
+
+    // Set headers for file download
+    res.setHeader("Content-Disposition", `attachment; filename="${file.name}"`);
+    res.setHeader("Content-Type", response.headers["content-type"] || "application/octet-stream");
+
+    // Stream the file to the response
+    response.data.pipe(res);
+  } catch (error) {
+    req.flash("connectionError", "Error downloading file, please check your connection and try again.");
+    res.redirect(`/storage/file/${file.id}`);
+  }
+});
