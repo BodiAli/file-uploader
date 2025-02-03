@@ -164,9 +164,9 @@ exports.deleteFolder = asyncHandler(async (req, res) => {
     });
   } catch (error) {
     if (error.code === "P2003") {
-      req.flash("validationError", [
-        { msg: "Please delete all files inside the folder before attempting to delete it" },
-      ]);
+      req.flash("validationError", {
+        msg: "Please delete all files inside the folder before attempting to delete it",
+      });
 
       const referrer = req.header("referrer") || "/storage";
       res.redirect(referrer);
@@ -213,7 +213,7 @@ exports.getFilePage = asyncHandler(async (req, res) => {
 
   const connectionError = req.flash("connectionError");
 
-  res.render("file", { file, flashMessage: connectionError.length > 0 ? connectionError : null });
+  res.render("file", { file, flashMessageError: connectionError.length > 0 ? connectionError : null });
 });
 
 exports.createFile = [
@@ -256,6 +256,35 @@ exports.createFile = [
   }),
 ];
 
+exports.updateFile = [
+  body("fileName").trim().notEmpty().withMessage("File name can not be empty."),
+  asyncHandler(async (req, res) => {
+    const errors = validationResult(req);
+
+    if (!errors.isEmpty()) {
+      req.flash("validationError", errors.array({ onlyFirstError: true }));
+      const referrer = req.header("referrer") || "/storage";
+      res.redirect(referrer);
+      return;
+    }
+
+    const id = Number(req.params.id);
+
+    await prisma.file.update({
+      data: {
+        name: req.body.fileName,
+      },
+      where: {
+        id,
+      },
+    });
+
+    const referrer = req.header("referrer") || "/storage";
+
+    res.redirect(referrer);
+  }),
+];
+
 exports.downloadFile = asyncHandler(async (req, res) => {
   const id = Number(req.params.id);
   const file = await prisma.file.findUnique({
@@ -278,7 +307,9 @@ exports.downloadFile = asyncHandler(async (req, res) => {
     // Stream the file to the response
     response.data.pipe(res);
   } catch (error) {
-    req.flash("connectionError", "Error downloading file, please check your connection and try again.");
+    req.flash("connectionError", {
+      msg: "Error downloading file, please check your connection and try again.",
+    });
     res.redirect(`/storage/file/${file.id}`);
   }
 });
