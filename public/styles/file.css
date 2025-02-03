@@ -1,0 +1,43 @@
+main {
+  padding: 1rem;
+}
+
+b {
+  font-weight: 500;
+}
+
+.text {
+  display: grid;
+  grid-template-columns: 1fr;
+  gap: 0.8rem;
+}
+
+.text > h2 {
+  font-size: 1.5rem;
+}
+
+.folder a {
+  color: black;
+}
+
+hr {
+  margin: 2rem 0;
+}
+
+form {
+  text-align: center;
+}
+
+form > button {
+  background-color: #0052b6;
+  color: #fff;
+  border: none;
+  border-radius: 5px;
+  font-size: 1.1rem;
+  padding: 0.5rem 1rem;
+  cursor: pointer;
+  transition: 200ms filter;
+  &:hover {
+    filter: brightness(1.2);
+  }
+}
