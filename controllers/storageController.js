@@ -285,6 +285,11 @@ exports.updateFile = [
   }),
 ];
 
+// TODO: Delete file from Cloudinary and from database
+exports.deleteFile = asyncHandler(async (req, res) => {
+  res.send("deleted");
+});
+
 exports.downloadFile = asyncHandler(async (req, res) => {
   const id = Number(req.params.id);
   const file = await prisma.file.findUnique({
