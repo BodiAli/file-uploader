@@ -273,10 +273,6 @@ dialog {
   width: 30px;
 }
 
-.dropdown {
-  justify-self: stretch;
-}
-
 .dropdown-content {
   display: none;
   position: absolute;
