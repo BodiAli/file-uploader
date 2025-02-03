@@ -17,7 +17,7 @@ storageRouter.post("/folder/:id/edit", storageController.updateFolder);
 storageRouter.post("/folder/:id/delete", storageController.deleteFolder);
 
 storageRouter.post("/file/:id/edit", storageController.updateFile);
-// storageRouter.post("/file/create/:id", storageController.createFile);
+storageRouter.post("/file/:id/delete", storageController.deleteFile);
 
 storageRouter.post("/file/:id/download", storageController.downloadFile);
 
