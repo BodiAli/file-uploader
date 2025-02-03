@@ -1,0 +1,30 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <%- include('partials/global') %>
+  <link rel="stylesheet" href="/styles/file.css">
+  <title><%= file.name %> | File Uploader</title>
+</head>
+<body>
+  <%- include('partials/header') %>
+  <%- include('partials/flash-message') %>
+  <main>
+    <section class="text">
+      <h2><b>Name:</b> <%= file.name %></h2>
+      <p class="folder"><b>Folder:</b> <a href="/storage/folder/<%= file.Folder.id %>"><%= file.Folder.name %></a></p>
+      <p class="size"><b>Size:</b> <%= file.size %></p>
+      <p class="date"><b>Created at:</b> <%= file.createdAt %></p>
+      <p class="date"><b>Updated at:</b> <%= file.updatedAt %></p>
+      <p class="url"><b>URL:</b> <a target="_blank" rel="noreferrer" href="<%= file.url %>"><%= file.url %></a></p>
+    </section>
+    <hr />
+    <section class="download">
+      <form action="/storage/file/<%= file.id %>/download" method="post">
+        <button type="submit">Download file</button>
+      </form>
+    </section>
+  </main>
+</body>
+</html>
