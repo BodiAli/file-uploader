@@ -156,11 +156,23 @@ exports.updateFolder = [
 exports.deleteFolder = asyncHandler(async (req, res) => {
   const id = Number(req.params.id);
 
-  await prisma.folder.delete({
-    where: {
-      id,
-    },
-  });
+  try {
+    await prisma.folder.delete({
+      where: {
+        id,
+      },
+    });
+  } catch (error) {
+    if (error.code === "P2003") {
+      req.flash("validationError", [
+        { msg: "Please delete all files inside the folder before attempting to delete it" },
+      ]);
+
+      const referrer = req.header("referrer") || "/storage";
+      res.redirect(referrer);
+      return;
+    }
+  }
 
   const referrer = req.header("referrer") || "/storage";
 
