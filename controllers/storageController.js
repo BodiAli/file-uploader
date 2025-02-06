@@ -237,9 +237,15 @@ exports.createFile = [
 
     const id = Number(req.params.id);
 
-    const { secure_url: url } = await cloudinary.uploader.upload(req.file.path, { resource_type: "auto" });
+    const {
+      secure_url: url,
+      public_id: cloudId,
+      resource_type: resourceType,
+    } = await cloudinary.uploader.upload(req.file.path, {
+      resource_type: "auto",
+    });
 
-    await fs.rm(req.file.destination, { recursive: true });
+    await fs.rm(req.file.path);
 
     await prisma.file.create({
       data: {
@@ -247,6 +253,8 @@ exports.createFile = [
         size: req.file.size,
         folderId: id,
         url,
+        cloudId,
+        resourceType,
       },
     });
 
@@ -285,9 +293,39 @@ exports.updateFile = [
   }),
 ];
 
-// TODO: Delete file from Cloudinary and from database
 exports.deleteFile = asyncHandler(async (req, res) => {
-  res.send("deleted");
+  const id = Number(req.params.id);
+
+  const file = await prisma.file.findUnique({
+    where: {
+      id,
+    },
+  });
+
+  try {
+    const { result } = await cloudinary.uploader.destroy(file.cloudId, { resource_type: file.resourceType });
+
+    if (result !== "ok") {
+      throw new Error("Error deleting file");
+    }
+
+    await prisma.file.delete({
+      where: {
+        id,
+      },
+    });
+
+    const referrer = req.header("referrer") || "/storage";
+
+    res.redirect(referrer);
+  } catch (error) {
+    req.flash("validationError", {
+      msg: "Error deleting file, please check your connection and try again.",
+    });
+
+    const referrer = req.header("referrer") || "/storage";
+    res.redirect(referrer);
+  }
 });
 
 exports.downloadFile = asyncHandler(async (req, res) => {
