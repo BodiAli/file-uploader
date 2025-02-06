@@ -8,6 +8,7 @@ const prisma = require("./prisma/prismaClient");
 const indexRouter = require("./routes/indexRouter");
 const authenticationRouter = require("./routes/authenticationRouter");
 const storageRouter = require("./routes/storageRouter");
+const shareRouter = require("./routes/shareRouter");
 
 require("./config/passportConfig");
 
@@ -45,6 +46,7 @@ app.use((req, res, next) => {
 app.use("/", indexRouter);
 app.use("/", authenticationRouter);
 app.use("/storage", storageRouter);
+app.use("/share", shareRouter);
 
 // app.use((err, req, res, _next) => {
 //   console.error(err);
