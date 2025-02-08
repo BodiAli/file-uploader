@@ -49,6 +49,10 @@ app.use("/", authenticationRouter);
 app.use("/storage", isAuthenticated, storageRouter);
 app.use("/share", shareRouter);
 
+app.use((req, res) => {
+  res.render("404-lost");
+});
+
 // app.use((err, req, res, _next) => {
 //   console.error(err);
 
