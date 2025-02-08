@@ -2,17 +2,23 @@ const asyncHandler = require("express-async-handler");
 const prisma = require("../prisma/prismaClient");
 
 exports.getSharePage = asyncHandler(async (req, res) => {
-  const folders = await prisma.folder.findMany({
+  const sharedFolders = await prisma.folder.findMany({
     where: {
       shared: true,
+      userId: req.user.id,
     },
     omit: {
       createdAt: true,
       updatedAt: true,
     },
   });
+  const folders = await prisma.folder.findMany({
+    where: {
+      userId: req.user.id,
+    },
+  });
 
-  console.log(folders);
+  console.log(sharedFolders);
 
-  res.render("share", { folders });
+  res.render("share", { sharedFolders, folders });
 });
