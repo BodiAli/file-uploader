@@ -12,15 +12,45 @@
   <main>
     <dialog>
       <form class="folder-form" action="/share/create" method="post">
-        <button class="close-modal" type="button"><img src="/images/close.svg" alt="Close modal"></button>
+        <button class="close-modal" type="button"><img src="/images/close.svg" alt="Close modal" /></button>
         <div>
           <label>
             Folders to share:
-            <select name="folders">
-
+            <select required multiple name="folders">
+              <% if (folders.length > 0) { %>
+                <% folders.forEach(folder => { %>
+                  <option value="<%= folder.id %>"><%= folder.name %></option>  
+                <% }) %>
+              <% } %>  
             </select>
           </label>
-          <button type="submit">Create folder</button>
+          <div class="duration-container">
+            <p class="duration">Duration:</p>
+            <div>
+              <label>
+                <input name="duration" type="radio" value="1" />
+                1 Hour
+              </label>
+              <label>
+                <input name="duration" type="radio" value="5" />
+                5 Hours
+              </label>
+              <label>
+                <input name="duration" type="radio" value="24" />
+                1 Day
+              </label>
+              <label>
+                <input name="duration" type="radio" value="72" />
+                3 Days
+              </label>
+              <label>
+                <input name="duration" type="radio" value="168" />
+                1 week
+              </label>
+            </div>
+          </div>
+          <p>Hold down the Ctrl (windows) or Command (Mac) button to select multiple options.</p>
+          <button type="submit">Generate link</button>
         </div>
       </form>
     </dialog>
@@ -29,7 +59,7 @@
       <p>Below are all your folders where you can share them with anyone!</p>
     </section>
     <section class="folders-container">
-      <div class="create-folder">
+      <div class="share-folder">
         <button>Share a new folder</button>
       </div>
       <div class="folders-info">
