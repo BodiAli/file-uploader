@@ -40,7 +40,7 @@
                 1 Day
               </label>
               <label>
-                <input name="duration" type="radio" value="72" />
+                <input name="duration" type="radio" value="72" checked />
                 3 Days
               </label>
               <label>
@@ -71,7 +71,7 @@
           <% sharedFolders.forEach(folder => { %>
            <div class="folder">
             <p><%= folder.name %></p>
-            <a href="/share/folder/<%= folder.id %>">Link</a>
+            <a href="/share/<%= folder.shareToken %>">Link</a>
            </div>
           <% }) %>
         <% } else { %>
