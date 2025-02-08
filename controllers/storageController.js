@@ -5,88 +5,81 @@ const { body, validationResult } = require("express-validator");
 const multer = require("multer");
 const byteSize = require("byte-size");
 const axios = require("axios");
-const { isAuthenticated } = require("./authenticationController");
 const prisma = require("../prisma/prismaClient");
 const cloudinary = require("../config/cloudinaryConfig");
 const NotFoundError = require("../errors/customNotFoundError");
 
 const upload = multer({ dest: "uploads/" });
 
-exports.getStoragePage = [
-  isAuthenticated,
-  asyncHandler(async (req, res) => {
-    const { sortBy } = req.query;
+exports.getStoragePage = asyncHandler(async (req, res) => {
+  const { sortBy } = req.query;
 
-    const result = await prisma.folder.findMany({
-      where: {
-        userId: req.user.id,
-        parentId: null,
-      },
-      orderBy: {
-        createdAt: sortBy || "asc",
-      },
-    });
+  const result = await prisma.folder.findMany({
+    where: {
+      userId: req.user.id,
+      parentId: null,
+    },
+    orderBy: {
+      createdAt: sortBy || "asc",
+    },
+  });
 
-    const folders = result.map((value) => ({
+  const folders = result.map((value) => ({
+    ...value,
+    createdAt: formatDistanceToNow(value.createdAt, { addSuffix: true, includeSeconds: true }),
+    updatedAt: formatDistanceToNow(value.updatedAt, { addSuffix: true, includeSeconds: true }),
+  }));
+
+  const validationError = req.flash("validationError");
+
+  res.render("storage", {
+    folders,
+    sortBy,
+    flashMessageError: validationError.length > 0 ? validationError : null,
+  });
+});
+
+exports.getFolderPage = asyncHandler(async (req, res) => {
+  const id = Number(req.params.id);
+
+  if (Number.isNaN(id)) {
+    throw new NotFoundError("Folder not found");
+  }
+
+  const result = await prisma.folder.findUnique({
+    where: {
+      id,
+    },
+    include: {
+      files: true,
+      subFolders: true,
+      parent: true,
+    },
+  });
+
+  if (!result) {
+    throw new NotFoundError("Folder not found");
+  }
+
+  const folder = {
+    ...result,
+    subFolders: result.subFolders.map((value) => ({
       ...value,
       createdAt: formatDistanceToNow(value.createdAt, { addSuffix: true, includeSeconds: true }),
       updatedAt: formatDistanceToNow(value.updatedAt, { addSuffix: true, includeSeconds: true }),
-    }));
+    })),
+    files: result.files.map((value) => ({
+      ...value,
+      createdAt: formatDistanceToNow(value.createdAt, { addSuffix: true, includeSeconds: true }),
+      updatedAt: formatDistanceToNow(value.updatedAt, { addSuffix: true, includeSeconds: true }),
+      size: byteSize(value.size, { precision: 2 }),
+    })),
+  };
 
-    const validationError = req.flash("validationError");
+  const validationError = req.flash("validationError");
 
-    res.render("storage", {
-      folders,
-      sortBy,
-      flashMessageError: validationError.length > 0 ? validationError : null,
-    });
-  }),
-];
-
-exports.getFolderPage = [
-  isAuthenticated,
-  asyncHandler(async (req, res) => {
-    const id = Number(req.params.id);
-
-    if (Number.isNaN(id)) {
-      throw new NotFoundError("Folder not found");
-    }
-
-    const result = await prisma.folder.findUnique({
-      where: {
-        id,
-      },
-      include: {
-        files: true,
-        subFolders: true,
-        parent: true,
-      },
-    });
-
-    if (!result) {
-      throw new NotFoundError("Folder not found");
-    }
-
-    const folder = {
-      ...result,
-      subFolders: result.subFolders.map((value) => ({
-        ...value,
-        createdAt: formatDistanceToNow(value.createdAt, { addSuffix: true, includeSeconds: true }),
-        updatedAt: formatDistanceToNow(value.updatedAt, { addSuffix: true, includeSeconds: true }),
-      })),
-      files: result.files.map((value) => ({
-        ...value,
-        createdAt: formatDistanceToNow(value.createdAt, { addSuffix: true, includeSeconds: true }),
-        updatedAt: formatDistanceToNow(value.updatedAt, { addSuffix: true, includeSeconds: true }),
-        size: byteSize(value.size, { precision: 2 }),
-      })),
-    };
-
-    const validationError = req.flash("validationError");
-
-    res.render("folder", { folder, flashMessageError: validationError.length > 0 ? validationError : null });
-  }),
-];
+  res.render("folder", { folder, flashMessageError: validationError.length > 0 ? validationError : null });
+});
 
 exports.createFolder = [
   body("folderName").trim().notEmpty().withMessage("Folder name can not be empty."),
