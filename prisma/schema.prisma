@@ -25,14 +25,14 @@ model Folder {
   createdAt    DateTime  @default(now())
   updatedAt    DateTime  @updatedAt
   name         String    @db.VarChar(255)
-  parent       Folder?   @relation("ParentFolder", fields: [parentId], references: [id], onDelete: Cascade)
-  subFolders   Folder[]  @relation("ParentFolder")
+  parent       Folder?   @relation("ParentSubFolders", fields: [parentId], references: [id], onDelete: Cascade)
+  subFolders   Folder[]  @relation("ParentSubFolders")
   parentId     Int?
   user         User      @relation(fields: [userId], references: [id])
   userId       Int
   files        File[]
   shared       Boolean   @default(false)
-  shareToken   String?
+  shareToken   String?   @unique
   shareExpires DateTime?
 }
 
