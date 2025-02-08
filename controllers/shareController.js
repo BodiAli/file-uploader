@@ -18,7 +18,40 @@ exports.getSharePage = asyncHandler(async (req, res) => {
     },
   });
 
-  console.log(sharedFolders);
+  console.log("shared folders", sharedFolders);
 
   res.render("share", { sharedFolders, folders });
 });
+
+exports.createSharedFolder = [
+  asyncHandler(async (req, res) => {
+    const { folders: foldersId } = req.body;
+    console.log("foldersId body", foldersId);
+
+    if (Array.isArray(foldersId)) {
+      foldersId.forEach(async (id) => {
+        await prisma.folder.update({
+          where: {
+            id: Number(id),
+          },
+          data: {
+            shared: true,
+          },
+        });
+      });
+    } else {
+      await prisma.folder.update({
+        where: {
+          id: Number(foldersId),
+        },
+        data: {
+          shared: true,
+        },
+      });
+    }
+
+    const referrer = req.header("referrer") || "/share";
+
+    res.redirect(referrer);
+  }),
+];
