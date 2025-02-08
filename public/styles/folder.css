@@ -106,7 +106,6 @@ dialog {
 }
 
 .folder-form input {
-  width: 100%;
   border: none;
   border-radius: 2px;
   box-shadow: 0 0 2px rgba(0, 0, 0, 0.509);
@@ -130,7 +129,6 @@ dialog {
   padding: 0.4rem 0.8rem;
   cursor: pointer;
   transition: 200ms filter;
-
   &:hover {
     filter: brightness(1.2);
   }
@@ -145,7 +143,6 @@ dialog {
 }
 
 .file-form input {
-  width: 100%;
   border: none;
   border-radius: 2px;
   box-shadow: 0 0 2px rgba(0, 0, 0, 0.509);
