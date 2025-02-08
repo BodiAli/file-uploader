@@ -49,6 +49,7 @@ exports.getFolderPage = asyncHandler(async (req, res) => {
   const result = await prisma.folder.findUnique({
     where: {
       id,
+      userId: req.user.id,
     },
     include: {
       files: true,
@@ -182,6 +183,9 @@ exports.getFilePage = asyncHandler(async (req, res) => {
   const result = await prisma.file.findUnique({
     where: {
       id,
+      Folder: {
+        userId: req.user.id,
+      },
     },
     include: {
       Folder: {
