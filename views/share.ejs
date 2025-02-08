@@ -15,8 +15,10 @@
         <button class="close-modal" type="button"><img src="/images/close.svg" alt="Close modal"></button>
         <div>
           <label>
-            Folder name:
-            <input type="text" name="folderName" required>
+            Folders to share:
+            <select name="folders">
+
+            </select>
           </label>
           <button type="submit">Create folder</button>
         </div>
@@ -35,8 +37,8 @@
         <p>URL</p>
       </div>
       <div class="folders">
-        <% if (folders.length > 0) { %>
-          <% folders.forEach(folder => { %>
+        <% if (sharedFolders.length > 0) { %>
+          <% sharedFolders.forEach(folder => { %>
            <div class="folder">
             <p><%= folder.name %></p>
             <a href="/share/folder/<%= folder.id %>">Link</a>
