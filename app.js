@@ -5,6 +5,7 @@ const session = require("express-session");
 const { PrismaSessionStore } = require("@quixo3/prisma-session-store");
 const passport = require("passport");
 const prisma = require("./prisma/prismaClient");
+const { isAuthenticated } = require("./controllers/authenticationController");
 const indexRouter = require("./routes/indexRouter");
 const authenticationRouter = require("./routes/authenticationRouter");
 const storageRouter = require("./routes/storageRouter");
@@ -45,7 +46,7 @@ app.use((req, res, next) => {
 
 app.use("/", indexRouter);
 app.use("/", authenticationRouter);
-app.use("/storage", storageRouter);
+app.use("/storage", isAuthenticated, storageRouter);
 app.use("/share", shareRouter);
 
 // app.use((err, req, res, _next) => {
