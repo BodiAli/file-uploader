@@ -101,7 +101,6 @@ dialog {
 }
 
 .folder-form input {
-  width: 100%;
   border: none;
   border-radius: 2px;
   box-shadow: 0 0 2px rgba(0, 0, 0, 0.509);
