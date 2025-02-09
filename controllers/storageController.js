@@ -52,7 +52,11 @@ exports.getFolderPage = asyncHandler(async (req, res) => {
       userId: req.user.id,
     },
     include: {
-      files: true,
+      files: {
+        orderBy: {
+          createdAt: "asc",
+        },
+      },
       subFolders: true,
       parent: true,
     },
@@ -174,11 +178,7 @@ exports.deleteFolder = asyncHandler(async (req, res) => {
 });
 
 exports.getFilePage = asyncHandler(async (req, res) => {
-  const id = Number(req.params.id);
-
-  if (Number.isNaN(id)) {
-    throw new NotFoundError("File not found");
-  }
+  const { id } = req.params;
 
   const result = await prisma.file.findUnique({
     where: {
@@ -232,7 +232,7 @@ exports.createFile = [
       return;
     }
 
-    const id = Number(req.params.id);
+    const folderId = Number(req.params.id);
 
     const {
       secure_url: url,
@@ -248,7 +248,7 @@ exports.createFile = [
       data: {
         name: req.file.originalname,
         size: req.file.size,
-        folderId: id,
+        folderId,
         url,
         cloudId,
         resourceType,
@@ -273,7 +273,7 @@ exports.updateFile = [
       return;
     }
 
-    const id = Number(req.params.id);
+    const { id } = req.params;
 
     await prisma.file.update({
       data: {
@@ -291,7 +291,7 @@ exports.updateFile = [
 ];
 
 exports.deleteFile = asyncHandler(async (req, res) => {
-  const id = Number(req.params.id);
+  const { id } = req.params;
 
   const file = await prisma.file.findUnique({
     where: {
@@ -326,7 +326,7 @@ exports.deleteFile = asyncHandler(async (req, res) => {
 });
 
 exports.downloadFile = asyncHandler(async (req, res) => {
-  const id = Number(req.params.id);
+  const { id } = req.params;
   const file = await prisma.file.findUnique({
     where: {
       id,
