@@ -20,6 +20,11 @@ b {
   color: black;
 }
 
+.url {
+  text-overflow: ellipsis;
+  overflow: hidden;
+}
+
 hr {
   margin: 2rem 0;
 }
