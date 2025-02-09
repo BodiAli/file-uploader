@@ -56,11 +56,11 @@ app.use((req, res) => {
 });
 
 app.use((err, req, res, _next) => {
-  console.error(err);
   if (err.statusCode) {
     res.status(err.statusCode).render("error", { error: err });
     return;
   }
+  console.error(err);
   res.status(500).send(err.message);
 });
 
@@ -69,5 +69,3 @@ const port = process.env.PORT || 3000;
 app.listen(port, () => {
   console.log(`App running on port ${port}`);
 });
-
-// TODO: Make app responsive.
