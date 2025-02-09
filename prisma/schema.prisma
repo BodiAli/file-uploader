@@ -37,7 +37,7 @@ model Folder {
 }
 
 model File {
-  id           Int      @id @default(autoincrement())
+  id           String   @id @default(uuid())
   name         String   @db.VarChar(255)
   size         Int
   url          String
