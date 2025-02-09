@@ -1,9 +1,11 @@
 require("dotenv").config();
+require("./instrument");
 const express = require("express");
 const flash = require("connect-flash");
 const session = require("express-session");
 const { PrismaSessionStore } = require("@quixo3/prisma-session-store");
 const passport = require("passport");
+const Sentry = require("@sentry/node");
 const prisma = require("./prisma/prismaClient");
 const { isAuthenticated } = require("./controllers/authenticationController");
 const indexRouter = require("./routes/indexRouter");
@@ -54,6 +56,8 @@ app.use("/share", shareRouter);
 app.use((req, res) => {
   res.render("404-lost");
 });
+
+Sentry.setupExpressErrorHandler(app);
 
 app.use((err, req, res, _next) => {
   if (err.statusCode) {
