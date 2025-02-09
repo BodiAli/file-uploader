@@ -45,7 +45,11 @@ exports.getSharedFolder = asyncHandler(async (req, res) => {
       shareToken: token,
     },
     include: {
-      files: true,
+      files: {
+        orderBy: {
+          name: "asc",
+        },
+      },
       user: {
         select: {
           username: true,
@@ -119,12 +123,20 @@ exports.createSharedFolder = [
 ];
 
 exports.downloadFile = asyncHandler(async (req, res) => {
-  const id = Number(req.params.id);
+  const { id } = req.params;
   const file = await prisma.file.findUnique({
     where: {
       id,
+      Folder: {
+        shared: true,
+      },
     },
   });
+
+  if (!file) {
+    throw new NotFoundError("File not found");
+  }
+
   try {
     // Use Axios to stream the file from Cloudinary
     const response = await axios.get(file.url, { responseType: "stream" });
