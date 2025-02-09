@@ -222,6 +222,7 @@ dialog {
   border-radius: 3px;
   font-weight: 500;
   justify-items: center;
+  gap: 5px;
 }
 
 .folders,
@@ -247,6 +248,7 @@ dialog {
   border-radius: 3px;
   justify-items: center;
   position: relative;
+  gap: 5px;
 }
 
 .folder > a {
@@ -315,4 +317,16 @@ dialog {
   white-space: nowrap;
   overflow: hidden;
   text-overflow: ellipsis;
+}
+
+@media (max-width: 950px) {
+  .folder-content-container {
+    grid-template-columns: 1fr;
+  }
+}
+
+@media (max-width: 800px) {
+  dialog {
+    width: 100%;
+  }
 }
