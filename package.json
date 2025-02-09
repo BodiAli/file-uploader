@@ -12,6 +12,7 @@
   "dependencies": {
     "@prisma/client": "^6.2.1",
     "@quixo3/prisma-session-store": "^3.1.13",
+    "@sentry/node": "^8.54.0",
     "axios": "^1.7.9",
     "bcrypt": "^5.1.1",
     "byte-size": "^9.0.1",
