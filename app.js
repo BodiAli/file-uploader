@@ -44,14 +44,16 @@ app.use((req, res, next) => {
   next();
 });
 
+require("./scheduledTask");
+
 app.use("/", indexRouter);
 app.use("/", authenticationRouter);
 app.use("/storage", isAuthenticated, storageRouter);
 app.use("/share", shareRouter);
 
-app.use((req, res) => {
-  res.render("404-lost");
-});
+// app.use((req, res) => {
+//   res.render("404-lost");
+// });
 
 // app.use((err, req, res, _next) => {
 //   console.error(err);
