@@ -82,6 +82,7 @@ dialog {
   display: grid;
   justify-items: center;
   gap: 1rem;
+  padding: 0 1rem;
 }
 
 .hero > p:first-child {
