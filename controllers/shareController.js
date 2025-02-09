@@ -1,11 +1,14 @@
 const asyncHandler = require("express-async-handler");
 const { v4: uuidv4 } = require("uuid");
+const axios = require("axios");
+const byteSize = require("byte-size");
+const { differenceInMinutes } = require("date-fns");
 const prisma = require("../prisma/prismaClient");
 const NotFoundError = require("../errors/customNotFoundError");
 const GoneError = require("../errors/customGoneError");
 
 exports.getSharePage = asyncHandler(async (req, res) => {
-  const sharedFolders = await prisma.folder.findMany({
+  const result = await prisma.folder.findMany({
     where: {
       shared: true,
       userId: req.user.id,
@@ -15,15 +18,21 @@ exports.getSharePage = asyncHandler(async (req, res) => {
       updatedAt: true,
     },
   });
+
+  const sharedFolders = result.map((folder) => ({
+    ...folder,
+    shareExpires: differenceInMinutes(folder.shareExpires, new Date()),
+  }));
+
   const folders = await prisma.folder.findMany({
     where: {
       userId: req.user.id,
+      shared: false,
     },
     orderBy: {
       name: "asc",
     },
   });
-  console.log("shared folders", sharedFolders);
 
   res.render("share", { sharedFolders, folders });
 });
@@ -31,26 +40,42 @@ exports.getSharePage = asyncHandler(async (req, res) => {
 exports.getSharedFolder = asyncHandler(async (req, res) => {
   const { token } = req.params;
 
-  const sharedFolder = await prisma.folder.findUnique({
+  const result = await prisma.folder.findUnique({
     where: {
       shareToken: token,
     },
     include: {
       files: true,
+      user: {
+        select: {
+          username: true,
+        },
+      },
     },
   });
 
-  if (!sharedFolder) {
+  if (!result) {
     throw new NotFoundError("Invalid share link");
   }
 
-  if (sharedFolder.expiresAt < new Date()) {
+  if (result.shareExpires < new Date()) {
     throw new GoneError("This shared link has expired.");
   }
 
-  console.log(sharedFolder);
+  const sharedFolder = {
+    ...result,
+    files: result.files.map((value) => ({
+      ...value,
+      size: byteSize(value.size, { precision: 2 }),
+    })),
+  };
 
-  res.render("shared-folder", { sharedFolder });
+  const connectionError = req.flash("connectionError");
+
+  res.render("shared-folder", {
+    sharedFolder,
+    flashMessageError: connectionError.length > 0 ? connectionError : null,
+  });
 });
 
 exports.createSharedFolder = [
@@ -60,8 +85,6 @@ exports.createSharedFolder = [
     const durationHours = Number(duration);
     const durationMs = durationHours * 60 * 60 * 1000;
     const expiresAt = new Date(Date.now() + durationMs);
-
-    console.log("foldersId body", foldersId);
 
     if (Array.isArray(foldersId)) {
       foldersId.forEach(async (id) => {
@@ -94,3 +117,34 @@ exports.createSharedFolder = [
     res.redirect(referrer);
   }),
 ];
+
+exports.downloadFile = asyncHandler(async (req, res) => {
+  const id = Number(req.params.id);
+  const file = await prisma.file.findUnique({
+    where: {
+      id,
+    },
+  });
+  try {
+    // Use Axios to stream the file from Cloudinary
+    const response = await axios.get(file.url, { responseType: "stream" });
+
+    if (response.statusText !== "OK") {
+      throw new Error("Connection error");
+    }
+
+    // Set headers for file download
+    res.setHeader("Content-Disposition", `attachment; filename="${file.name}"`);
+    res.setHeader("Content-Type", response.headers["content-type"] || "application/octet-stream");
+
+    // Stream the file to the response
+    response.data.pipe(res);
+  } catch (error) {
+    req.flash("connectionError", {
+      msg: "Error downloading file, please check your connection and try again.",
+    });
+
+    const referrer = req.header("referrer") || "/share";
+    res.redirect(referrer);
+  }
+});
