@@ -88,7 +88,6 @@ footer {
   padding: 1rem;
   display: grid;
   grid-template-columns: 1fr auto;
-  justify-items: space-between;
   align-items: center;
 }
 
@@ -116,4 +115,16 @@ footer div:last-child > a {
 
 footer div:first-child > p {
   font-size: 0.9rem;
+}
+
+@media (max-width: 875px) {
+  footer {
+    position: static;
+  }
+}
+
+@media (max-width: 700px) {
+  .cards {
+    grid-template-columns: 1fr;
+  }
 }
