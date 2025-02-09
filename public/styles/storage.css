@@ -172,6 +172,7 @@ dialog {
   padding: 1rem;
   border-radius: 3px;
   font-weight: 500;
+  gap: 5px;
 }
 
 .folders {
@@ -189,6 +190,7 @@ dialog {
 .folder {
   display: grid;
   grid-template-columns: repeat(4, 1fr);
+  gap: 5px;
   padding: 1rem;
   background-color: #d2f3ca;
   border-radius: 3px;
@@ -261,4 +263,27 @@ dialog {
 
 .folder > * {
   margin-left: 5px;
+}
+
+@media (max-width: 800px) {
+  dialog {
+    width: 100%;
+  }
+}
+
+@media (max-width: 700px) {
+  .dropdown {
+    position: static;
+  }
+
+  .dropdown-content {
+    left: 50%;
+    right: auto;
+    width: 50%;
+    transform: translateX(-50%);
+  }
+
+  .folder {
+    position: relative;
+  }
 }
