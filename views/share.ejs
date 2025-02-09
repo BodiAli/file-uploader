@@ -65,6 +65,7 @@
       <div class="folders-info">
         <p>Name</p>
         <p>URL</p>
+        <p>URL will expire in (minutes)</p>
       </div>
       <div class="folders">
         <% if (sharedFolders.length > 0) { %>
@@ -72,6 +73,7 @@
            <div class="folder">
             <p><%= folder.name %></p>
             <a href="/share/<%= folder.shareToken %>">Link</a>
+            <p><%= folder.shareExpires %></p>
            </div>
           <% }) %>
         <% } else { %>
