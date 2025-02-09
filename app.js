@@ -51,18 +51,23 @@ app.use("/", authenticationRouter);
 app.use("/storage", isAuthenticated, storageRouter);
 app.use("/share", shareRouter);
 
-// app.use((req, res) => {
-//   res.render("404-lost");
-// });
+app.use((req, res) => {
+  res.render("404-lost");
+});
 
-// app.use((err, req, res, _next) => {
-//   console.error(err);
-
-//   res.status(500).send(err);
-// });
+app.use((err, req, res, _next) => {
+  console.error(err);
+  if (err.statusCode) {
+    res.status(err.statusCode).render("error", { error: err });
+    return;
+  }
+  res.status(500).send(err.message);
+});
 
 const port = process.env.PORT || 3000;
 
 app.listen(port, () => {
   console.log(`App running on port ${port}`);
 });
+
+// TODO: Make app responsive.
