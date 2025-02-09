@@ -1,0 +1,41 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <%- include('partials/global') %>
+  <link rel="stylesheet" href="/styles/shared-folder.css">
+  <title><%= sharedFolder.name %> | File uploader</title>
+</head>
+<body>
+  <%- include('partials/header') %>
+  <%- include('partials/flash-message') %>
+  <main>
+    <section class="hero">
+      <p>Folder: <%= sharedFolder.name %></p>
+      <p>User: <%= sharedFolder.user.username %></p>
+    </section>
+      <section class="files-container">
+        <h3>Files</h3>
+        <div class="files-info">
+          <p>Name</p>
+          <p>Type</p>
+          <p>Size</p>
+        </div>
+        <div class="files">
+          <% if (sharedFolder.files.length > 0) { %>
+            <% sharedFolder.files.forEach(file => { %>
+            <div class="file">
+              <a href="/share/file/<%= file.id %>"><%= file.name %></a>
+              <p><%= file.resourceType %></p>
+              <p><%= file.size %></p>
+            </div>
+            <% }) %>
+          <% } else { %>
+            <p class="empty-text">This folder has no files.</p>
+          <% } %>
+        </div>
+      </section>
+  </main>
+</body>
+</html>
