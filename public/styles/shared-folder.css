@@ -59,3 +59,9 @@ main {
   border-radius: 3px;
   justify-items: center;
 }
+
+@media (max-width: 500px) {
+  .hero > p {
+    font-size: 1.6rem;
+  }
+}
