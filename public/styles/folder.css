@@ -330,3 +330,15 @@ dialog {
     width: 100%;
   }
 }
+
+@media (max-width: 500px) {
+  .folders-info,
+  .files-info {
+    font-size: 0.9rem;
+  }
+
+  .folder,
+  .file {
+    font-size: 0.9rem;
+  }
+}
