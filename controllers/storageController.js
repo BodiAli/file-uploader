@@ -216,8 +216,9 @@ exports.getFilePage = asyncHandler(async (req, res) => {
 exports.createFile = [
   upload.single("uploadedFile"),
 
-  body("uploadedFile").custom((value, { req }) => {
+  body("uploadedFile").custom(async (value, { req }) => {
     if (req.file.size > 5242880) {
+      await fs.rm(req.file.path);
       throw new Error("File cannot be larger than 5MB");
     }
     return true;
