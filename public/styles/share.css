@@ -151,3 +151,9 @@ dialog {
   text-decoration: none;
   color: #0052b6;
 }
+
+@media (max-width: 800px) {
+  dialog {
+    width: 100%;
+  }
+}
