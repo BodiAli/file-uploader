@@ -193,6 +193,7 @@ dialog {
 
 .folder-content-container {
   display: grid;
+  gap: 4rem;
   grid-template-columns: 1fr 1.2fr;
 }
 
@@ -313,7 +314,7 @@ dialog {
 
 .file > a,
 .folder > a {
-  max-width: 130px;
+  max-width: 100%;
   white-space: nowrap;
   overflow: hidden;
   text-overflow: ellipsis;
