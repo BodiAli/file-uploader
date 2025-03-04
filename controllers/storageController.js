@@ -220,6 +220,9 @@ exports.createFile = [
     if (req.file.size > 5242880) {
       await fs.rm(req.file.path);
       throw new Error("File cannot be larger than 5MB");
+    } else if (req.file.size === 0) {
+      await fs.rm(req.file.path);
+      throw new Error("File cannot be empty");
     }
     return true;
   }),
