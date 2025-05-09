@@ -1,5 +1,4 @@
 <h1 align="center">File Uploader</h1>
-# File Uploader
 
 <p>Stripped down version of Google Drive (or any other personal storage service).</p>
 
